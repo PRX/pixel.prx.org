@@ -26,6 +26,9 @@
     "url": "https://github.com/PRX/pixel.prx.org/issues"
   },
   "homepage": "https://github.com/PRX/pixel.prx.org",
+  "dependencies": {
+    "lambda-log": "^2.2.0"
+  },
   "devDependencies": {
     "express": "^4.16.4",
     "jest": "^24.7.1",

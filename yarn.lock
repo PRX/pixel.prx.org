@@ -2175,7 +2175,7 @@ json-schema@0.2.3:
   version "0.2.3"
   resolved "https://registry.yarnpkg.com/json-schema/-/json-schema-0.2.3.tgz#b480c892e59a2f05954ce727bd3f2a4e882f9e13"
 
-json-stringify-safe@~5.0.1:
+json-stringify-safe@^5.0.1, json-stringify-safe@~5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/json-stringify-safe/-/json-stringify-safe-5.0.1.tgz#1296a2d58fd45f19a0f6ce01d65701e2c735b6eb"
 
@@ -2217,6 +2217,13 @@ kind-of@^6.0.0, kind-of@^6.0.2:
 kleur@^3.0.2:
   version "3.0.3"
   resolved "https://registry.yarnpkg.com/kleur/-/kleur-3.0.3.tgz#a79c9ecc86ee1ce3fa6206d1216c501f147fc07e"
+
+lambda-log@^2.2.0:
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/lambda-log/-/lambda-log-2.2.0.tgz#39981bbded4fc2ed4f71f8b0c0c4682971a8d9c1"
+  integrity sha512-RM2NiHkz7ahL1TLBuDBnPy4G1BtA1rn25/YVvCidC3agjvnCPU6g1awYiHAEEnTt6ah93Ay/7oMULQrCuPeUdA==
+  dependencies:
+    json-stringify-safe "^5.0.1"
 
 latest-version@^3.0.0:
   version "3.1.0"
