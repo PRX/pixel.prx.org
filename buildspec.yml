@@ -1,9 +1,9 @@
 version: 0.2
-env:
-  variables:
-    # PRX_LAMBDA_CODE_S3_KEY: "lambda/PRX-pixel.prx.org.zip"
-    # PRX_LAMBDA_CODE_CONFIG_PARAMETERS: "PixelPrxOrgCodeS3ObjectVersion"
-    # PRX_LAMBDA_ARCHIVE_BUILD_PATH: "/app/build.zip"
+# env:
+#   variables:
+#     PRX_LAMBDA_CODE_S3_KEY: "lambda/PRX-pixel.prx.org.zip"
+#     PRX_LAMBDA_CODE_CONFIG_PARAMETERS: "PixelPrxOrgCodeS3ObjectVersion"
+#     PRX_LAMBDA_ARCHIVE_BUILD_PATH: "/app/build.zip"
 phases:
   build:
     commands:
