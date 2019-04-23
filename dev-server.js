@@ -13,7 +13,7 @@ app.use(async (req, res) => {
     queryStringParameters: req.query || null,
     pathParameters: (req.path === '/') ? null : {proxy: req.path},
     stageVariables: null,
-    requestContext: {},
+    requestContext: {identity: {sourceIp: req.connection.remoteAddress}},
     isBase64Encoded: false,
   }
   try {
