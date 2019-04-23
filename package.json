@@ -27,6 +27,7 @@
   },
   "homepage": "https://github.com/PRX/pixel.prx.org",
   "dependencies": {
+    "isbot": "^2.2.1",
     "lambda-log": "^2.2.0"
   },
   "devDependencies": {
