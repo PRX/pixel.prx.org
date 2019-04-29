@@ -32,32 +32,36 @@ describe('index', () => {
     expect(resp.headers['content-type']).toEqual('image/gif')
     expect(resp.headers['content-length']).toEqual(35)
     expect(resp.isBase64Encoded).toEqual(true)
-    expect(new Buffer(resp.body, 'base64').byteLength).toEqual(35)
+    expect(Buffer.from(resp.body, 'base64').byteLength).toEqual(35)
+  })
+
+  it('returns the homepage', async () => {
+    const resp = await handler({...event, path: '/'})
+    expect(resp.statusCode).toEqual(200)
+    expect(resp.headers['content-type']).toEqual('text/html')
+    expect(resp.body).toMatch('<html>')
   })
 
   it('tracks impressions', async () => {
     expect(await handler(event)).toMatchObject({statusCode: 200})
     expect(tracker.__log.length).toEqual(1)
-    expect(tracker.__log[0]).toEqual([
-      'my-key-here',
-      'http://the.canonical/url',
-      'my-agent',
-      '98.76.54.321',
-      'https://www.prx.org/',
-    ])
+    expect(tracker.__log[0].query).toEqual({k: 'my-key-here', c: 'http://the.canonical/url'})
+    expect(tracker.__log[0].headers).toEqual({
+      'user-agent': 'my-agent',
+      'x-forwarded-for': '98.76.54.321',
+      'referer': 'https://www.prx.org/',
+    })
   })
 
   it('lowercases header values', async () => {
     const headers = {'User-Agent': 'agent2', 'x-FORwarDED-for': 'ip2', 'Referer': 'ref2'}
     expect(await handler({...event, headers})).toMatchObject({statusCode: 200})
     expect(tracker.__log.length).toEqual(1)
-    expect(tracker.__log[0]).toEqual([
-      'my-key-here',
-      'http://the.canonical/url',
-      'agent2',
-      'ip2',
-      'ref2',
-    ])
+    expect(tracker.__log[0].headers).toEqual({
+      'user-agent': 'agent2',
+      'x-forwarded-for': 'ip2',
+      'referer': 'ref2',
+    })
   })
 
   it('responds to HEAD requests', async () => {
@@ -73,7 +77,6 @@ describe('index', () => {
   })
 
   it('returns 404s for unknown paths', async () => {
-    expect(await handler({})).toMatchObject({statusCode: 404})
     expect(await handler({...event, path: '/any/path'})).toMatchObject({statusCode: 404})
     expect(await handler({...event, path: '/any/i.gif'})).toMatchObject({statusCode: 404})
     expect(await handler({...event, path: '/i.png'})).toMatchObject({statusCode: 404})
@@ -83,13 +86,7 @@ describe('index', () => {
     const headers = {...event.headers, 'x-forwarded-for': undefined}
     expect(await handler({...event, headers})).toMatchObject({statusCode: 200})
     expect(tracker.__log.length).toEqual(1)
-    expect(tracker.__log[0]).toEqual([
-      'my-key-here',
-      'http://the.canonical/url',
-      'my-agent',
-      '123.456.78.9',
-      'https://www.prx.org/',
-    ])
+    expect(tracker.__log[0].identity).toEqual({sourceIp: '123.456.78.9'})
   })
 
   it('catches and logs errors', async () => {
