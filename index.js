@@ -8,9 +8,9 @@ const tracker = require('./lib/tracker')
  */
 exports.handler = async (event) => {
   try {
-    const query = event.queryStringParameters
-    const headers = util.keysToLowerCase(event.headers)
-    const identity = (event.requestContext || {}).identity
+    const query = event.queryStringParameters || {}
+    const headers = util.keysToLowerCase(event.headers) || {}
+    const identity = (event.requestContext || {}).identity || {}
 
     if (event.httpMethod !== 'GET' && event.httpMethod !== 'HEAD') {
       return util.text(405, 'Method not allowed')
