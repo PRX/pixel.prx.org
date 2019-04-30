@@ -8,18 +8,19 @@ const tracker = require('./lib/tracker')
  */
 exports.handler = async (event) => {
   try {
-    const isRead = ['GET', 'HEAD'].indexOf(event.httpMethod) > -1
     const query = event.queryStringParameters
     const headers = util.keysToLowerCase(event.headers)
     const identity = (event.requestContext || {}).identity
 
-    if ((event.path === '' || event.path === '/') && isRead) {
+    if (event.httpMethod !== 'GET' && event.httpMethod !== 'HEAD') {
+      return util.text(405, 'Method not allowed')
+    } else if (event.path === '' || event.path === '/') {
       return pages.home()
-    } else if (event.path === '/i.gif' && isRead) {
+    } else if (event.path === '/admin') {
+      return await pages.admin(query, headers)
+    } else if (event.path === '/i.gif') {
       await tracker.log(query, headers, identity)
       return util.pixel()
-    } else if (!isRead) {
-      return util.text(405, 'Method not allowed')
     } else {
       return util.text(404, 'Pixel not found')
     }
