@@ -9,22 +9,58 @@ function.  Incoming requests for the `/i.gif` path will log information about th
 user to kinesis, for later processing and shipping to BigQuery by the
 [analytics-ingest-lambda](https://github.com/PRX/analytics-ingest-lambda).
 
-In order for a request to be recorded by the pixel tracker, 3 pieces of information
+In order for a request to be recorded by the pixel tracker, 5 pieces of information
 must be present, and 2 optional:
 
-1. A valid `?k=` key query param (any string).
-2. A valid `?c=` canonical-url query param (any string).
-3. A non-bot user-agent header.
-4. _(optional)_ An `x-forwarded-for` header. Defaults to the source-ip of the request.
-5. _(optional)_ A `referer` header.
+1. A string `?k=` key query param.
+2. A string `?c=` canonical-url query param.
+3. A string `?d=` destination bigquery table.
+4. A valid `?s=` signature for any query params on the request
+5. A non-bot user-agent header.
+6. _(optional)_ An `x-forwarded-for` header. Defaults to the source-ip of the request.
+7. _(optional)_ A `referer` header.
 
-Additionally, the timestamp of the request will be recorded to kinesis.
+With all those present, a record will be put to the `KINESIS_STREAM` env stream
+name, containing a json object:
+
+```json
+{
+  "type": "pixel",
+  "destination": "dataset1.table_name_1",
+  "timestamp": 1490827132999,
+  "key": "any-string-here",
+  "canonical": "https://www.prx.org/url1",
+  "remoteAgent": "some-user-agent",
+  "remoteIp": "50.21.204.248, 127.0.0.1",
+  "remoteReferrer": "https://www.prx.org/technology/"
+}
+```
+
+## Signing requests
+
+An admin page is included at the `/admin` route to assist in signing requests.
+It includes a form allowing authorized users to fill in:
+
+1. A string key
+2. A canonical url
+3. Select a destination `dataset.table`, preset in the `DESTINATIONS` env variable
+
+After submitting the form, the request is signed with a `?s=` query param, and is
+now a valid pixel tracker url.
 
 # Installation
 
 To get started, first install dev dependencies with `yarn`.  Then run `yarn test`.  End of list!
 
 Or to use docker, just run `docker-compose build` and `docker-compose run test`.
+
+To run the development server (simulates API gateway at localhost:3000):
+
+```sh
+cp env-example .env
+vi .env
+yarn start
+```
 
 # Deploying
 

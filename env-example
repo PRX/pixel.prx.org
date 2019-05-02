@@ -1,4 +1,4 @@
 DESTINATIONS=some_table,another_table
 ID_HOST=id.prx.org
-KINESIS_STREAM=
+KINESIS_STREAM=some-stream-name
 SIGNER_SECRET=some-random-string
