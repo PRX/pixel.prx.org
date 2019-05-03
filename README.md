@@ -48,6 +48,14 @@ It includes a form allowing authorized users to fill in:
 After submitting the form, the request is signed with a `?s=` query param, and is
 now a valid pixel tracker url.
 
+## Environment variables
+
+- `DESTINATIONS` a comma separated list of `dataset.table` BigQuery tables to
+  include on the admin page dropdown.
+- `ID_HOST` the PRX ID server used to authenticate users for access to the admin page
+- `KINESIS_STREAM` the destination stream for tracked pixels
+- `SIGNER_SECRET` a secret string used to sign pixel query parameters
+
 # Installation
 
 To get started, first install dev dependencies with `yarn`.  Then run `yarn test`.  End of list!
