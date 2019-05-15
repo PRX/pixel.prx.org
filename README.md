@@ -10,7 +10,7 @@ user to kinesis, for later processing and shipping to BigQuery by the
 [analytics-ingest-lambda](https://github.com/PRX/analytics-ingest-lambda).
 
 In order for a request to be recorded by the pixel tracker, 5 pieces of information
-must be present, and 2 optional:
+must be present, and 3 optional:
 
 1. A string `?k=` key query param.
 2. A string `?c=` canonical-url query param.
@@ -19,6 +19,10 @@ must be present, and 2 optional:
 5. A non-bot user-agent header.
 6. _(optional)_ An `x-forwarded-for` header. Defaults to the source-ip of the request.
 7. _(optional)_ A `referer` header.
+8. _(optional)_ A `cookie` header containing the `_pxid` key
+
+Additionally, requests without a cookie will be redirected from `/i.gif` to
+`/r.gif` in an attempt to set the optional `_pxid` cookie.
 
 With all those present, a record will be put to the `KINESIS_STREAM` env stream
 name, containing a json object:
@@ -32,7 +36,8 @@ name, containing a json object:
   "canonical": "https://www.prx.org/url1",
   "remoteAgent": "some-user-agent",
   "remoteIp": "50.21.204.248, 127.0.0.1",
-  "remoteReferrer": "https://www.prx.org/technology/"
+  "remoteReferrer": "https://www.prx.org/technology/",
+  "userId": "my-user-id-string"
 }
 ```
 

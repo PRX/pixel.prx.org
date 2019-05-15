@@ -21,6 +21,7 @@ app.use(async (req, res) => {
     const data = await handler.handler(event)
     if (data.statusCode) {
       res.status(data.statusCode)
+      res.set(data.headers || {})
       if (data.body && data.isBase64Encoded) {
         const buff = Buffer.from(data.body, 'base64')
         res.send(buff)
